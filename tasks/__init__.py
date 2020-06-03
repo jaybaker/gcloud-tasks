@@ -33,9 +33,9 @@ def push(queue, target, payload, **kwargs):
     response = client.create_task(parent, task)
     return response
 
-def delete_queue(queue_name):
-    queue_path = client.queue_path(settings.PROJECT, 
-            settings.LOCATION, 
+def delete_queue(queue_name, project=None, location=None):
+    queue_path = client.queue_path(project, 
+            location, 
             queue_name)
 
     try:
@@ -46,8 +46,8 @@ def delete_queue(queue_name):
 
 def create_queue(queue_name, project=None, location=None):
     queue = {
-        'name': client.queue_path(settings.PROJECT, 
-            settings.LOCATION, 
+        'name': client.queue_path(project, 
+            location, 
             queue_name)
     }
 
@@ -58,9 +58,9 @@ def create_queue(queue_name, project=None, location=None):
     except Exception as e:
         print(e)
 
-def task_count(queue_name):
-    queue_path = client.queue_path(settings.PROJECT, 
-            settings.LOCATION, 
+def task_count(queue_name, project=None, location=None):
+    queue_path = client.queue_path(project, 
+            location, 
             queue_name)
 
     count = 0
