@@ -2,6 +2,7 @@ import json
 import time
 
 from google.cloud import tasks
+from google.protobuf import duration_pb2
 from google.protobuf import timestamp_pb2
 
 client = tasks.CloudTasksClient()
@@ -12,13 +13,19 @@ def push(queue, target, payload, **kwargs):
     parent = client.queue_path(project, location, queue)
 
     encoded_payload = json.dumps(payload).encode()
+    # default response deadline is 15 minutes
+    # this is how long task handler has before task system 
+    # marks task as DEADLINE_EXCEEDED
+    response_deadline = kwargs.get('response_deadline', 15 * 60)
+    deadline = duration_pb2.Duration().FromSeconds(response_deadline)
     task = {
         'http_request': {
             'http_method': 'POST',
             'url': target,
             'body': encoded_payload,
             'headers': {'Content-Type': 'application/json'}
-        }
+        },
+        'dispatch_deadline': deadline
     }
 
     if 'countdown' in kwargs:
