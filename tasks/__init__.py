@@ -34,7 +34,7 @@ def push(queue, target, payload, **kwargs):
         timestamp.FromSeconds(when)
         task['schedule_time'] = timestamp
 
-    response = client.create_task(parent, task)
+    response = client.create_task(request=dict(parent=parent, task=task))
     return response
 
 def delete_queue(queue_name, project=None, location=None):
