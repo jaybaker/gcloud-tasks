@@ -7,9 +7,11 @@ from google.protobuf import timestamp_pb2
 
 client = tasks.CloudTasksClient()
 
-def push(queue, target, payload, **kwargs):
+DEFAULT_LOCATION = 'us-central1'
+
+def push(queue, target, payload, location=DEFAULT_LOCATION, **kwargs):
     # fully qualified queue name
-    project, location = kwargs['project'], kwargs['location']
+    project = kwargs['project']
     parent = client.queue_path(project, location, queue)
 
     encoded_payload = json.dumps(payload).encode()
@@ -40,7 +42,7 @@ def push(queue, target, payload, **kwargs):
     response = client.create_task(request=dict(parent=parent, task=task))
     return response
 
-def delete_queue(queue_name, project=None, location=None):
+def delete_queue(queue_name, project=None, location=DEFAULT_LOCATION):
     queue_path = client.queue_path(project, 
             location, 
             queue_name)
@@ -51,7 +53,7 @@ def delete_queue(queue_name, project=None, location=None):
     except Exception as e:
         print(e)
 
-def create_queue(queue_name, project=None, location=None):
+def create_queue(queue_name, project=None, location=DEFAULT_LOCATION):
     queue = {
         'name': client.queue_path(project, 
             location, 
@@ -65,7 +67,7 @@ def create_queue(queue_name, project=None, location=None):
     except Exception as e:
         print(e)
 
-def task_count(queue_name, project=None, location=None):
+def task_count(queue_name, project=None, location=DEFAULT_LOCATION):
     queue_path = client.queue_path(project, 
             location, 
             queue_name)
