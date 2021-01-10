@@ -31,7 +31,8 @@ def push(queue, target, payload, location=DEFAULT_LOCATION, **kwargs):
     }
 
     if kwargs.get('name'):
-        task['name'] = kwargs.get('name')
+        name = f'projects/{project}/locations/{location}/queues/{queue}/tasks/{kwargs["name"]}'
+        task['name'] = name
 
     if 'countdown' in kwargs:
         when = int(time.time()) + kwargs['countdown']
