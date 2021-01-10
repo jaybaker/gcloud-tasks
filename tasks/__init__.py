@@ -28,6 +28,9 @@ def push(queue, target, payload, **kwargs):
         'dispatch_deadline': deadline
     }
 
+    if kwargs.get('name'):
+        task['name'] = kwargs.get('name')
+
     if 'countdown' in kwargs:
         when = int(time.time()) + kwargs['countdown']
         timestamp = timestamp_pb2.Timestamp()
